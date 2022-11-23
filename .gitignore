@@ -14,9 +14,9 @@ Debug/
 Release/
 
 # Compiled protobuf code
-*_pb2.py
-*.pb.cc
-*.pb.h
+# *_pb2.py
+# *.pb.cc
+# *.pb.h
 
 # pycache
 *__pycache__*

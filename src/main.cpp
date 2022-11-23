@@ -81,16 +81,18 @@ int main(int argc, char** argv) {
 
         bool userOverride = reqMsg.allow_user_override();
 
+        // Move mouse cursor according to request
+        if (!(reqMsg.mouse().x() == 0 && reqMsg.mouse().y() == 0))
+            moveMouse(reqMsg.mouse().x(), reqMsg.mouse().y(), false);
+        else if (!(reqMsg.client_mouse().x() == 0 && reqMsg.client_mouse().y() == 0))
+            moveMouse(reqMsg.client_mouse().x(), reqMsg.client_mouse().y(), true);
+
         // Press/release requested keys
         for (int i = 0; i < reqMsg.press_keys_size(); i++)
             sendKey(reqMsg.press_keys(i), true, userOverride);
 
         for (int i = 0; i < reqMsg.release_keys_size(); i++)
             sendKey(reqMsg.release_keys(i), false, userOverride);
-
-        // Move mouse cursor according to request
-        if (!(reqMsg.mouse().x() == 0 && reqMsg.mouse().y() == 0))
-            moveMouse(reqMsg.mouse().x(), reqMsg.mouse().y());
 
         // If client requested an image
         if (reqMsg.get_image()) {
