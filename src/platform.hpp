@@ -39,7 +39,7 @@ unsigned long getJPGScreenshot(std::string* processName, char** imageBuffer,
 /*
     Moves the mouse cursor by the given amount of pixels.
  */
-unsigned int moveMouse(long dx, long dy);
+unsigned int moveMouse(long dx, long dy, bool client_coordinates);
 
 /*
     Presses or releases the given key. The down parameter defines if

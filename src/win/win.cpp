@@ -120,6 +120,10 @@ void createHiddenWindow(WNDPROC wndProc) {
     Sets the keyboard and mouse hooks.
  */
 void installHooks() {
+    // for debug
+    return;
+
+
     HHOOK hook = SetWindowsHookEx(WH_MOUSE_LL, mouseHook, NULL, 0);
     if (hook == NULL)
         std::cout << "Mouse hook failed" << std::endl;

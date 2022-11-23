@@ -11,6 +11,7 @@
 
 #include "../keys.hpp"
 #include "../platform.hpp"
+#include "../screen.hpp"
 
 #ifdef PROFILING
     #include "../profiling.hpp"
@@ -19,19 +20,39 @@
     #define END_TIMER(desc)
 #endif
 
-unsigned int moveMouse(long dx, long dy) {
+unsigned int moveMouse(long dx, long dy, bool client_coordinates = false) {
     INPUT input;
 
     input.type = INPUT_MOUSE;
 
-    input.mi.dwFlags = MOUSEEVENTF_MOVE;
-    input.mi.dx = dx;
-    input.mi.dy = dy;
+    if (client_coordinates) {
+        input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+
+        POINT ptClientUL;
+        ptClientUL.x = dx;
+        ptClientUL.y = dy;
+        clientToScreen(&ptClientUL);
+        int x = ptClientUL.x;
+        int y = ptClientUL.y;
+
+        int width = GetSystemMetrics(SM_CXSCREEN);
+        int height = GetSystemMetrics(SM_CYSCREEN);
+        int absX = (x * 65536 + width - 1) / width;
+        int absY = (y * 65536 + height - 1) / height;
+        input.mi.dx = absX;
+        input.mi.dy = absY;
+        /*        */
+    }
+    else {
+        input.mi.dwFlags = MOUSEEVENTF_MOVE;
+        input.mi.dx = dx;
+        input.mi.dy = dy;
+        std::unique_lock<std::mutex> lock(inputMutex);
+        expectedMouseMovement.push_front(std::pair<long, long>(input.mi.dx, input.mi.dy));
+        lock.unlock();
+    }
     input.mi.time = 0;
 
-    std::unique_lock<std::mutex> lock(inputMutex);
-    expectedMouseMovement.push_front(std::pair<long, long>(dx, dy));
-    lock.unlock();
 
     return SendInput(1, &input, sizeof(INPUT));
 }

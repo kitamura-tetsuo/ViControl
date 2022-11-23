@@ -25,16 +25,17 @@ message Request {
 
     // Mouse movement in pixels
     Point mouse = 6;
+    Point client_mouse = 7;
 
     // Whether the response should include the currently pressed keys
-    bool get_keys = 7;
+    bool get_keys = 8;
 
     // Whether the response should include mouse movement
-    bool get_mouse = 8;
+    bool get_mouse = 9;
 
     // If this is set, press_keys and release_keys will be ignored if
     // the user is pressing any keys manually
-    bool allow_user_override = 9;
+    bool allow_user_override = 10;
 }
 
 message Response {

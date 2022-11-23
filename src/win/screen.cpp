@@ -31,9 +31,9 @@ unsigned long getJPGScreenshot(std::string* processName, char** imageBuffer,
                                unsigned int quality) {
 
     Bitmap* screenshot;
-
+    
     // Parameters for EnumWindows callback
-    WindowEnumParams params;      
+    WindowEnumParams params;
     params.processName = processName;
     params.screenshot = screenshot;
 
@@ -233,4 +233,8 @@ bool CALLBACK enumWindowsCallback(HWND hwnd, LPARAM lParam) {
         return FALSE;
     }
     return TRUE;
+}
+
+void clientToScreen(LPPOINT point) {
+    ClientToScreen(cachedWindow, point);
 }
